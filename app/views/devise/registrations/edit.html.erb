@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-12 col-md-8">
-    <div class="mt-4" style="max-width: 575px;">
-      <h2 class="text-center">Edit <%= resource_name.to_s.humanize %></h2>
+    <div style="max-width: 575px;">
+      <h2 class="text-center">Edit <%= resource_name.to_s %></h2>
 
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: {method: :put, class: "form-horizontal"}) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
@@ -43,15 +43,15 @@
   </div>
 
   <div class="col-sm-12 col-md-4">
-    <h5 class="mt-4">Cancel my account</h5>
+    <h2>Warning zone</h2>
 
     <div>
       Unhappy?
-      <%= button_to "Cancel my account", registration_path(resource_name), data: {confirm: "Are you sure?", turbo_confirm: "Are you sure?"}, method: :delete, class: "btn btn-danger mt-2" %>
+      <%= button_to "Cancel my account", registration_path(resource_name), data: {confirm: "Are you sure?", turbo_confirm: "Are you sure?"}, method: :delete, class: "btn btn-danger" %>
     </div>
 
     <div class="mt-3">
-      <%= link_to "Back", :back, class: "btn btn-secondary" %>
+      <%= button_to "Log out", destroy_session_path(resource_name), data: {confirm: "Are you sure?", turbo_confirm: "Are you sure?"}, method: :delete, class: "btn btn-secondary" %>
     </div>
   </div>
 </div>

@@ -1,0 +1,35 @@
+<style>
+  nav.pagination span {margin: 0 0.25rem;}
+</style>
+<h2 class="text-center mb-3">Exam history</h2>
+<div class="row text-center">
+  <% Examination::CATEGORIES.values.each do |category| %>
+    <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3">
+      <%= get_link_to_exam(category) %>
+    </div>
+  <% end %>
+</div>
+<table class="table table-bordered text-center">
+  <caption><i>Getting 32/40 questions correct is enough to pass the test</i></caption>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Category</th>
+      <th>Number Of Correct Answers</th>
+      <th>Number Of Questions</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @examinations.each do |exam| %>
+      <tr>
+        <td><%= exam.user.email %></td>
+        <td><%= Examination::CATEGORIES[exam.category.to_sym] %></td>
+        <td><%= exam.number_of_correct_answers %></td>
+        <td><%= exam.number_of_questions %></td>
+        <td><span class="<%= exam.pass? ? "text-success" : "text-danger" %>"><%= exam.status.upcase %></span></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= paginate @examinations %>
