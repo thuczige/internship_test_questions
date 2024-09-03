@@ -1,0 +1,105 @@
+<%= form_with url: url, method: :post, html: {class: "mb-4", id: "questions-form"} do |f| %>
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <h2 class="mb-3 text-danger" id="countdown-timer"></h2>
+      <div class="row">
+        <% @questions.each.with_index(1) do |_, index| %>
+          <div class="col-md-3 col-2 mb-3">
+            <span id="js-question-num-<%= index %>" style="display: block; text-align: center; padding: 0.25rem; border: 1px solid; border-radius: 0.25rem; color: #979797; cursor: pointer" onclick="onClickQuestionNumber(event)">
+              <%= index %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+      <div class="d-grid my-3">
+        <%= submit_tag "Nộp bài", class: "btn btn-primary btn-block" %>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-8" style="height: calc(100vh - 107px); overflow: auto; scrollbar-width: none; -ms-overflow-style: none">
+      <%= hidden_field_tag :start_at, Time.zone.now %>
+      <% @questions.each.with_index(1) do |question, index| %>
+        <div class="js-question-item p-2" id="js-question-item-<%= index %>" data-index="<%= index %>">
+          <h5>Câu hỏi <%= index %></h5>
+          <div class="ms-3">
+            <strong class="d-block mb-2"><%= question[:question] %></strong>
+            <% question[:options].each do |key, value| %>
+              <div class="form-check">
+                <%= radio_button_tag "answers[#{question[:id]}]", key, class: "form-check-input", onchange: "onChangeAnswer(event)" %>
+                <label class="form-check-label" for="answers_<%= question[:id] %>_<%= key %>">
+                  <%= value %>
+                </label>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+<script>
+  let countDownInterval = null
+
+  document.addEventListener("turbo:load", function() {
+    showCountDownTimer()
+
+    window.addEventListener("beforeunload", beforeUnloadHandler)
+  })
+
+  document.addEventListener("turbo:before-render", function() {
+    clearInterval(countDownInterval)
+
+    window.addEventListener("beforeunload", beforeUnloadHandler)
+  })
+
+  function beforeUnloadHandler(e) {
+    const examPathRegex = /^\/exams\/(html|css|javascript|ruby|mysql|git)$/
+
+    if (!examPathRegex.test(window.location.pathname)) return
+
+    e.preventDefault()
+    e.returnValue = ""
+  }
+
+  function showCountDownTimer() {
+    if (!document.getElementById("countdown-timer")) return
+
+    let countDownDate = new Date().getTime() + 30 * 60 * 1000
+
+    countDownInterval = setInterval(function() {
+      let now = new Date().getTime()
+      let distance = countDownDate - now
+      let minutes = Math.floor(distance / (1000 * 60))
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000)
+
+      document.getElementById("countdown-timer").innerHTML = minutes + "m" + seconds
+
+      if (distance < 0) {
+        clearInterval(countDownInterval)
+        window.removeEventListener("beforeunload", beforeUnloadHandler)
+        document.getElementById("countdown-timer").innerHTML = "EXPIRED"
+        document.getElementById("questions-form").submit()
+      }
+    }, 0)
+  }
+
+  function onClickQuestionNumber(event) {
+    let target = event.target
+    let index = target.getAttribute("id").split("-").pop()
+
+    document.getElementById(`js-question-item-${index}`).scrollIntoView()
+    document.getElementById(`js-question-item-${index}`).style.backgroundColor = "#FFF3CD"
+
+    setTimeout(function() {
+      document.getElementById(`js-question-item-${index}`).style.backgroundColor = ""
+    }, 1000)
+  }
+
+  function onChangeAnswer(event) {
+    let target = event.target
+    let questionItem = target.closest(".js-question-item")
+    let index = questionItem.getAttribute("data-index")
+
+    document.getElementById(`js-question-num-${index}`).style.color = "#0D6EFD"
+    document.getElementById(`js-question-num-${index}`).style.borderColor = "#0D6EFD"
+  }
+</script>

@@ -10,7 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_01_032606) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_01_122423) do
+  create_table "examinations", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "category", null: false
+    t.integer "status", null: false
+    t.datetime "start_at", null: false
+    t.datetime "end_at", null: false
+    t.integer "number_of_correct_answers", null: false
+    t.integer "number_of_questions", null: false
+    t.text "answers"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_examinations_on_category"
+    t.index ["number_of_correct_answers"], name: "index_examinations_on_number_of_correct_answers"
+    t.index ["status"], name: "index_examinations_on_status"
+    t.index ["user_id"], name: "index_examinations_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -36,4 +53,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_01_032606) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
+
+  add_foreign_key "examinations", "users"
 end

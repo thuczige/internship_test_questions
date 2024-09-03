@@ -14,7 +14,8 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :exams, only: %i[index new create]
-
-  resources :results, only: %i[index]
+  %w[html css javascript ruby mysql git].each do |type|
+    get "exams/#{type}", to: "#{type}#new"
+    post "exams/#{type}", to: "#{type}#create"
+  end
 end
