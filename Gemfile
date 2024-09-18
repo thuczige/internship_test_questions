@@ -36,7 +36,7 @@ gem "bootsnap", "1.18.4", require: false
 # Flexible authentication solution for Rails with Warden
 gem "devise", "4.9.4"
 # Loads environment variables from `.env`
-gem "dotenv", "3.1.2"
+gem "dotenv", "3.1.4"
 # A generalized Rack framework for multiple-provider authentication
 gem "omniauth", "2.1.2"
 # Scope & Engine based, clean, powerful, agnostic, customizable and sophisticated paginator
